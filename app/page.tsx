@@ -41,17 +41,20 @@ export default function LandingPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#080d14] font-sans selection:bg-emerald-500/30 selection:text-emerald-200 overflow-x-hidden">
+    <div className="min-h-screen font-sans selection:bg-emerald-500/30 selection:text-emerald-200 overflow-x-hidden">
       
       {/* ── NAVBAR ── */}
       <nav className="fixed top-0 w-full z-50 transition-all duration-300 border-b border-white/5 bg-black/40 backdrop-blur-2xl">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-3">
+          <Link href="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
             <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#10b981] to-[#0ea5e9] flex items-center justify-center shadow-[0_0_20px_rgba(16,185,129,0.3)]">
               <HeartPulse className="h-6 w-6 text-white" />
             </div>
-            <span className="font-black text-white tracking-tight text-2xl">Smart<span className="text-emerald-400">Triage</span></span>
-          </div>
+            <span className="font-black tracking-tight text-xl leading-none">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300 drop-shadow-[0_0_8px_rgba(20,184,166,0.6)]">संजीवनी</span>
+              <span className="text-white ml-1">Lifeline</span>
+            </span>
+          </Link>
           <div className="flex items-center gap-4">
             <Link href="/login" className="hidden sm:block text-sm font-bold text-white/70 hover:text-white transition-colors">
               Sign In
@@ -84,17 +87,19 @@ export default function LandingPage() {
             <span className="text-xs font-black uppercase tracking-widest text-emerald-300">MedAI Engine v2.0 Live</span>
           </motion.div>
           
-          <motion.h1 
+          <motion.div 
             initial={{ opacity: 0, y: 20 }} 
             animate={{ opacity: 1, y: 0 }} 
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-5xl md:text-7xl font-black text-white tracking-tight leading-[1.1] mb-8"
+            className="mb-8"
           >
-            The Future of <br className="hidden md:block" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-sky-400">
-              Clinical Intelligence
-            </span>
-          </motion.h1>
+            <h1 className="text-6xl sm:text-7xl lg:text-8xl font-black text-white tracking-tight leading-[1.3] pb-2 mb-4">
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 drop-shadow-[0_0_15px_rgba(20,184,166,0.5)]">
+                संजीवनी
+              </span>
+              <span className="block mt-2">Lifeline</span>
+            </h1>
+          </motion.div>
 
           <motion.p 
             initial={{ opacity: 0, y: 20 }} 
@@ -102,7 +107,7 @@ export default function LandingPage() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto font-medium leading-relaxed mb-12"
           >
-            Empower your healthcare facility with multi-agent AI triage. Cut intake times by 60%, avoid adverse drug interactions, and generate hospital-grade reports instantly.
+            Enterprise clinical AI that bridges patient self-triage with hospital administration. Experience next-generation emergency health routing.
           </motion.p>
 
           <motion.div 
@@ -113,7 +118,7 @@ export default function LandingPage() {
           >
             <Link href="/login" className="w-full sm:w-auto">
               <button className="w-full relative group inline-flex items-center justify-center gap-3 rounded-2xl bg-white px-8 py-4 text-base font-black text-black transition-all hover:scale-105 active:scale-95 shadow-[0_0_40px_rgba(255,255,255,0.2)]">
-                Launch Platform
+                Enter The Application
                 <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </button>
             </Link>
@@ -233,7 +238,7 @@ export default function LandingPage() {
           </Link>
         </div>
         <div className="mt-20 text-slate-600 text-sm font-semibold">
-          © {new Date().getFullYear()} SmartTriage • MedAI Inc. • All rights reserved.
+          © {new Date().getFullYear()} संजीवनी Lifeline • MedAI Tech • All rights reserved.
         </div>
       </footer>
     </div>

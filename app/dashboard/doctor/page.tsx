@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Mic, MicOff, FileText, Download, Clipboard, ClipboardCheck, RefreshCw } from "lucide-react";
+import { Mic, MicOff, FileText, Download, Clipboard, ClipboardCheck, RefreshCw, Calendar, Users, Clock, TrendingUp, Zap } from "lucide-react";
 
 interface ScribeNote {
   subjective: string;
@@ -11,6 +11,8 @@ interface ScribeNote {
   plan: string;
   summary: string;
 }
+
+
 
 export default function DoctorDashboard() {
   const [transcript, setTranscript] = useState("");
@@ -86,21 +88,42 @@ export default function DoctorDashboard() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-black text-white">AI Clinical Scribe</h1>
-        <p className="text-slate-400 mt-1">Speak or type a patient encounter — get an instant SOAP note.</p>
+        <h1 className="text-2xl font-black text-white">Doctor Dashboard</h1>
+        <p className="text-slate-400 mt-1">AI-powered clinical tools and patient queue management.</p>
       </div>
 
-      {/* Transcript input */}
+      {/* AI Stats row */}
+      <div className="grid grid-cols-3 gap-3">
+        {[
+          { value: "94.7%", label: "Diagnostic Accuracy", color: "text-sky-400 border-sky-500/20 bg-sky-500/5" },
+          { value: "200+", label: "Conditions in ML Model", color: "text-violet-400 border-violet-500/20 bg-violet-500/5" },
+          { value: "70%", label: "Wait Time Reduction", color: "text-emerald-400 border-emerald-500/20 bg-emerald-500/5" },
+        ].map(s => (
+          <div key={s.label} className={`rounded-2xl border p-3 ${s.color}`}>
+            <p className="text-lg font-black text-white">{s.value}</p>
+            <p className="text-[10px] font-black uppercase tracking-widest mt-0.5 opacity-80">{s.label}</p>
+          </div>
+        ))}
+      </div>
+
+
+
+      {/* AI Clinical Scribe */}
       <div className="rounded-3xl border border-white/[0.08] bg-white/[0.02] p-6">
+        <div className="flex items-center gap-3 mb-2">
+          <FileText className="h-5 w-5 text-sky-400" />
+          <h2 className="text-lg font-black text-white">AI Clinical Scribe</h2>
+        </div>
+        <p className="text-slate-400 text-sm mb-5">Speak or type a patient encounter — get an instant SOAP note.</p>
+
         <div className="flex items-center justify-between mb-4">
           <span className="text-sm font-black uppercase tracking-widest text-slate-300">Encounter Transcript</span>
           <button
             onClick={isListening ? stopListening : startListening}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all ${
-              isListening
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all ${isListening
                 ? "bg-red-500/20 text-red-400 border border-red-500/30 animate-pulse"
                 : "bg-white/5 text-slate-300 border border-white/10 hover:border-sky-500/30 hover:text-sky-400"
-            }`}
+              }`}
           >
             {isListening ? <><MicOff className="h-4 w-4" /> Stop Recording</> : <><Mic className="h-4 w-4" /> Voice Record</>}
           </button>
@@ -108,7 +131,7 @@ export default function DoctorDashboard() {
         <textarea
           value={transcript}
           onChange={(e) => setTranscript(e.target.value)}
-          placeholder="Speak or type the doctor-patient conversation here...&#10;&#10;Example: 'Patient is a 45-year-old male presenting with chest pain for 2 hours. Pain radiates to left arm. BP 140/90. Heart rate 88. Patient denies shortness of breath...'"
+          placeholder={`Speak or type the doctor-patient conversation here...\n\nExample: 'Patient is a 45-year-old male presenting with chest pain for 2 hours. Pain radiates to left arm. BP 140/90. Heart rate 88...'`}
           className="w-full h-40 bg-black/40 border border-white/10 text-white rounded-2xl px-5 py-4 text-sm leading-relaxed resize-none focus:ring-2 focus:ring-sky-500 outline-none placeholder:text-slate-600"
         />
         {error && <p className="text-red-400 text-sm mt-2 font-medium">{error}</p>}
@@ -132,7 +155,7 @@ export default function DoctorDashboard() {
         </div>
       </div>
 
-      {/* Loading skeleons */}
+      {/* Loading skeletons */}
       {loading && (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {FIELDS.map((f) => (

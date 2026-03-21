@@ -75,9 +75,14 @@ function LoginForm() {
       transition={{ duration: 0.35 }}
       className="space-y-6"
     >
-      <div>
-        <h2 className="text-3xl font-black text-white bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-teal-400">One-Click Demo Access</h2>
-        <p className="mt-2 text-slate-300">Select a role to instantly bypass authentication for judging purposes.</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-3xl font-black text-white bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-teal-400">One-Click Demo Access</h2>
+          <p className="mt-2 text-slate-300">Select a role to instantly bypass authentication for judging purposes.</p>
+        </div>
+        <Link href="/" className="px-4 py-2 text-xs font-bold bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 text-white transition-colors">
+          &larr; Home
+        </Link>
       </div>
 
       <div className="grid gap-3 sm:grid-cols-1">

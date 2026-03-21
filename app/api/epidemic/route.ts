@@ -8,18 +8,28 @@ const openai = new OpenAI({
 
 export async function GET() {
   try {
-    const prompt = `You are an epidemiologist AI analyzing global and seasonal disease trends right now (early 2026).
-Provide a concise epidemic risk summary for hospital administrators.
-Return ONLY JSON:
+    const prompt = `You are an AI Hospital Administrator dashboard for a major Indian city (like Bhubaneswar, Delhi, or Mumbai) currently analyzing regional disease trends and exact blood bank inventory in real-time.
+Provide a highly realistic, localized summary.
+Return ONLY valid JSON matching this exact structure:
 {
-  "overall_risk": "Low|Medium|High",
+  "hospital_name": "AIIMS / Apollo / KIMS (Choose a realistic generic Indian hospital name context)",
+  "overall_risk": "Low" | "Medium" | "High",
   "alerts": [
-    {"disease": "Influenza A", "risk": "High", "region": "Northern Hemisphere", "note": "Peak season active"},
-    {"disease": "Dengue", "risk": "Medium", "region": "South Asia", "note": "Elevated cases post-monsoon"},
-    {"disease": "RSV", "risk": "Medium", "region": "Global", "note": "Uptick in pediatric admissions"}
+    {"disease": "Dengue Fever", "risk": "High", "region": "Local Wards", "note": "Post-monsoon spike, increase platelet reserves"},
+    {"disease": "Typhoid", "risk": "Medium", "region": "City Outskirts", "note": "Waterborne cases rising"}
   ],
-  "recommendation": "Ensure adequate ICU capacity and PPE stock. Increase flu vaccination outreach for elderly patients.",
-  "last_updated": "2026-03-21"
+  "recommendation": "One sentence acting as a hospital admin directive.",
+  "blood_inventory": [
+    { "type": "O+", "units": 18, "status": "High" },
+    { "type": "O-", "units": 2, "status": "Critical" },
+    { "type": "A+", "units": 12, "status": "High" },
+    { "type": "A-", "units": 4, "status": "Low" },
+    { "type": "B+", "units": 9, "status": "Medium" },
+    { "type": "B-", "units": 1, "status": "Critical" },
+    { "type": "AB+", "units": 6, "status": "Medium" },
+    { "type": "AB-", "units": 3, "status": "Low" }
+  ],
+  "last_updated": "Just now"
 }`;
 
     const res = await openai.chat.completions.create({
@@ -33,13 +43,24 @@ Return ONLY JSON:
     return NextResponse.json(data);
   } catch {
     return NextResponse.json({
+      hospital_name: "City General Hospital",
       overall_risk: "Medium",
       alerts: [
-        { disease: "Influenza A", risk: "High", region: "Northern Hemisphere", note: "Peak season – monitor ICU admissions." },
-        { disease: "Dengue", risk: "Medium", region: "South Asia", note: "Post-monsoon spike expected." },
+        { disease: "Dengue Fever", risk: "Medium", region: "Local District", note: "Monitor platelet stock." },
+        { disease: "Influenza A", risk: "High", region: "City Center", note: "Seasonal uptick." },
       ],
-      recommendation: "Maintain PPE stock. Increase seasonal vaccination outreach.",
-      last_updated: "2026-03-21",
+      recommendation: "Ensure adequate ICU capacity. Monitor O- blood stock.",
+      blood_inventory: [
+        { type: "O+", units: 14, status: "High" },
+        { type: "O-", units: 2, status: "Critical" },
+        { type: "A+", units: 10, status: "High" },
+        { type: "A-", units: 3, status: "Low" },
+        { type: "B+", units: 8, status: "Medium" },
+        { type: "B-", units: 2, status: "Critical" },
+        { type: "AB+", units: 5, status: "Medium" },
+        { type: "AB-", units: 1, status: "Critical" }
+      ],
+      last_updated: "Just now",
     });
   }
 }
