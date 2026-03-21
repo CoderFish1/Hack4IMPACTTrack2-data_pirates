@@ -84,37 +84,44 @@
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
+  --background: #080d14;
+  --foreground: rgba(231, 243, 255, 0.96);
+  --card: rgba(255, 255, 255, 0.04);
+  --card-foreground: rgba(231, 243, 255, 0.96);
+  --popover: rgba(255, 255, 255, 0.04);
+  --popover-foreground: rgba(231, 243, 255, 0.96);
+
+  /* MedTech Green */
+  --primary: #14b8a6;
+  --primary-foreground: #021b17;
+  --secondary: rgba(255, 255, 255, 0.07);
+  --secondary-foreground: rgba(231, 243, 255, 0.96);
+
+  --muted: rgba(255, 255, 255, 0.06);
+  --muted-foreground: rgba(231, 243, 255, 0.66);
+
+  --accent: rgba(20, 184, 166, 0.14);
+  --accent-foreground: #14b8a6;
+
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --border: rgba(255, 255, 255, 0.10);
+  --input: rgba(255, 255, 255, 0.07);
+  --ring: rgba(20, 184, 166, 0.35);
+
+  --chart-1: rgba(20, 184, 166, 0.75);
+  --chart-2: rgba(34, 197, 94, 0.75);
+  --chart-3: rgba(59, 130, 246, 0.75);
+  --chart-4: rgba(245, 158, 11, 0.75);
+  --chart-5: rgba(239, 68, 68, 0.75);
+
+  --sidebar: rgba(255, 255, 255, 0.03);
+  --sidebar-foreground: rgba(231, 243, 255, 0.96);
+  --sidebar-primary: rgba(20, 184, 166, 0.22);
+  --sidebar-primary-foreground: rgba(231, 243, 255, 0.96);
+  --sidebar-accent: rgba(20, 184, 166, 0.14);
+  --sidebar-accent-foreground: rgba(231, 243, 255, 0.96);
+  --sidebar-border: rgba(255, 255, 255, 0.10);
+  --sidebar-ring: rgba(20, 184, 166, 0.35);
 }
 
 @layer base {

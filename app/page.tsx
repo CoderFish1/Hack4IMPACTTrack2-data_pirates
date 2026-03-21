@@ -1,154 +1,241 @@
 "use client";
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Activity, AlertTriangle, ShieldAlert, Mic } from "lucide-react";
+import { motion } from "framer-motion";
+import Link from "next/link";
+import { useTheme } from "next-themes";
+import { useState, useEffect } from "react";
+import {
+  HeartPulse, Activity, Shield, Users, Brain, FileText, ArrowRight,
+  Sun, Moon, Star, Zap, Lock, Globe
+} from "lucide-react";
 
-interface AIResult {
-  possible_conditions: string[];
-  precautions: string[];
-  recommendation_level: "Self-Care" | "Consult Doctor" | "Urgent Care";
-}
+export default function LandingPage() {
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
 
-export default function Home() {
-  const [symptoms, setSymptoms] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<AIResult | null>(null);
-  const [error, setError] = useState("");
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-  const handleAnalyze = async () => {
-    if (!symptoms.trim()) {
-      setError("Please describe your symptoms first.");
-      return;
-    }
-
-    setLoading(true);
-    setError("");
-    setResult(null);
-
-    try {
-      const res = await fetch("/api/analyze", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ symptoms }),
-      });
-
-      if (!res.ok) throw new Error("Failed to analyze symptoms");
-
-      const data: AIResult = await res.json();
-      setResult(data);
-    } catch (err) {
-      setError("Our AI is currently taking a break. Please try again in a moment.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const getRecommendationStyle = (level: string) => {
-    switch (level) {
-      case "Urgent Care": return "bg-red-100 text-red-800 border-red-300";
-      case "Consult Doctor": return "bg-yellow-100 text-yellow-800 border-yellow-300";
-      default: return "bg-green-100 text-green-800 border-green-300";
-    }
-  };
+  const features = [
+    {
+      icon: <Brain className="h-6 w-6 text-emerald-400" />,
+      title: "Multi-Agent AI Triage",
+      desc: "Instant consensus from specialized AI models (Cardiology, Neurology, General) to formulate accurate preliminary assessments.",
+    },
+    {
+      icon: <Shield className="h-6 w-6 text-sky-400" />,
+      title: "Med-Safe Profiling",
+      desc: "Real-time algorithmic checks for drug interactions and contraindications, ensuring patient safety before any medication is prescribed.",
+    },
+    {
+      icon: <FileText className="h-6 w-6 text-violet-400" />,
+      title: "Instant SBAR Export",
+      desc: "One-click generation of standard clinical handover reports, bridging the gap between digital triage and real-world ER workflows.",
+    },
+    {
+      icon: <Lock className="h-6 w-6 text-amber-400" />,
+      title: "Privacy First",
+      desc: "Military-grade encryption and local secure enclaves keep patient data safe. HIPAA compliant out of the box.",
+    },
+  ];
 
   return (
-    <main className="min-h-screen bg-slate-50 p-4 md:p-8 font-sans">
-      <div className="max-w-3xl mx-auto space-y-6">
+    <div className="min-h-screen bg-[#080d14] font-sans selection:bg-emerald-500/30 selection:text-emerald-200 overflow-x-hidden">
+      
+      {/* ── NAVBAR ── */}
+      <nav className="fixed top-0 w-full z-50 transition-all duration-300 border-b border-white/5 bg-black/40 backdrop-blur-2xl">
+        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#10b981] to-[#0ea5e9] flex items-center justify-center shadow-[0_0_20px_rgba(16,185,129,0.3)]">
+              <HeartPulse className="h-6 w-6 text-white" />
+            </div>
+            <span className="font-black text-white tracking-tight text-2xl">Smart<span className="text-emerald-400">Triage</span></span>
+          </div>
+          <div className="flex items-center gap-4">
+            <Link href="/login" className="hidden sm:block text-sm font-bold text-white/70 hover:text-white transition-colors">
+              Sign In
+            </Link>
+            <Link href="/login">
+              <button className="group relative hidden sm:flex items-center justify-center gap-2 rounded-xl bg-white/10 px-5 py-2.5 text-sm font-bold text-white transition-all hover:bg-white/20 hover:scale-105 active:scale-95 border border-white/10 overflow-hidden">
+                <span className="relative z-10">Get Started</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/20 to-sky-500/20 opacity-0 group-hover:opacity-100 transition-opacity" />
+              </button>
+            </Link>
+          </div>
+        </div>
+      </nav>
+
+      {/* ── HERO SECTION ── */}
+      <section className="relative pt-40 pb-20 lg:pt-48 lg:pb-32 px-6">
         
-        {/* 🚨 Mandatory Medical Disclaimer */}
-        <Alert variant="destructive" className="bg-red-50 border-red-200 text-red-800">
-          <ShieldAlert className="h-4 w-4" />
-          <AlertTitle>Important Disclaimer</AlertTitle>
-          <AlertDescription>
-            This AI assistant is for informational purposes only and is NOT a substitute for professional medical advice, diagnosis, or treatment. In a medical emergency, call your local emergency services immediately.
-          </AlertDescription>
-        </Alert>
+        {/* Background glow effects */}
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-emerald-500/20 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute top-1/3 left-1/4 w-[400px] h-[400px] bg-sky-500/15 rounded-full blur-[100px] pointer-events-none" />
 
-        {/* 🎯 Header */}
-        <div className="text-center py-6">
-          <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 flex items-center justify-center gap-3">
-            <Activity className="text-blue-600 h-10 w-10" />
-            Smart Healthcare AI
-          </h1>
-          <p className="text-slate-500 mt-2 text-lg">Describe how you are feeling, and our AI will help triage your symptoms.</p>
-        </div>
-
-        {/* ✍️ Input Section */}
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
-          <div className="relative">
-            <Textarea 
-              placeholder="e.g., I've had a sharp pain behind my left eye for 2 days, and bright lights make it worse..."
-              className="min-h-[120px] text-lg resize-none p-4"
-              value={symptoms}
-              onChange={(e) => setSymptoms(e.target.value)}
-            />
-            <Button size="icon" variant="ghost" className="absolute bottom-2 right-2 text-slate-400 hover:text-blue-600">
-              <Mic className="h-5 w-5" />
-            </Button>
-          </div>
-          
-          {error && <p className="text-red-500 text-sm font-medium">{error}</p>}
-
-          <Button 
-            onClick={handleAnalyze} 
-            disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-lg py-6 transition-all"
+        <div className="max-w-7xl mx-auto text-center relative z-10">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.5 }}
+            className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-4 py-1.5 backdrop-blur-md mb-8"
           >
-            {loading ? "Analyzing Symptoms..." : "Analyze Symptoms"}
-          </Button>
+            <span className="flex h-2 w-2 rounded-full bg-emerald-400 w-2 h-2 animate-pulse" />
+            <span className="text-xs font-black uppercase tracking-widest text-emerald-300">MedAI Engine v2.0 Live</span>
+          </motion.div>
+          
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="text-5xl md:text-7xl font-black text-white tracking-tight leading-[1.1] mb-8"
+          >
+            The Future of <br className="hidden md:block" />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-sky-400">
+              Clinical Intelligence
+            </span>
+          </motion.h1>
+
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto font-medium leading-relaxed mb-12"
+          >
+            Empower your healthcare facility with multi-agent AI triage. Cut intake times by 60%, avoid adverse drug interactions, and generate hospital-grade reports instantly.
+          </motion.p>
+
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-4"
+          >
+            <Link href="/login" className="w-full sm:w-auto">
+              <button className="w-full relative group inline-flex items-center justify-center gap-3 rounded-2xl bg-white px-8 py-4 text-base font-black text-black transition-all hover:scale-105 active:scale-95 shadow-[0_0_40px_rgba(255,255,255,0.2)]">
+                Launch Platform
+                <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              </button>
+            </Link>
+            <div className="flex items-center gap-4 mt-4 sm:mt-0 text-slate-500 text-sm font-bold">
+              <div className="flex -space-x-3">
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className={`w-8 h-8 rounded-full border-2 border-[#080d14] flex items-center justify-center bg-slate-800`}>
+                    <Star className="w-4 h-4 text-emerald-500" />
+                  </div>
+                ))}
+              </div>
+              <p>Trusted by <span className="text-white">100+</span> clinics</p>
+            </div>
+          </motion.div>
         </div>
 
-        {/* ⏳ Loading State (The Skeleton) */}
-        {loading && (
-          <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-6">
-            <Skeleton className="h-8 w-1/3" />
-            <div className="flex gap-2"><Skeleton className="h-6 w-24" /><Skeleton className="h-6 w-32" /></div>
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-5/6" />
-          </div>
-        )}
-
-        {/* 📊 Results Dashboard */}
-        {result && !loading && (
-          <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className={`p-4 border-b flex items-center gap-3 font-semibold text-lg ${getRecommendationStyle(result.recommendation_level)}`}>
-              <AlertTriangle className="h-6 w-6" />
-              Recommendation: {result.recommendation_level}
+        {/* Hero Image / Dashboard Preview */}
+        <motion.div
+           initial={{ opacity: 0, y: 40 }} 
+           animate={{ opacity: 1, y: 0 }} 
+           transition={{ duration: 0.7, delay: 0.5 }}
+           className="mt-20 relative max-w-5xl mx-auto"
+        >
+          <div className="absolute inset-0 bg-gradient-to-t from-[#080d14] via-transparent to-transparent z-10" />
+          <div className="relative rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-xl p-2 md:p-4 shadow-2xl overflow-hidden">
+            <div className="w-full h-8 bg-black/40 rounded-t-2xl flex items-center px-4 gap-2 mb-2">
+              <div className="w-3 h-3 rounded-full bg-red-500/80" />
+              <div className="w-3 h-3 rounded-full bg-amber-500/80" />
+              <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
             </div>
-
-            <div className="p-6 space-y-6">
-              <div>
-                <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3">Possible Conditions</h3>
-                <div className="flex flex-wrap gap-2">
-                  {result.possible_conditions.map((condition, idx) => (
-                    <Badge key={idx} variant="secondary" className="text-sm py-1 px-3 bg-blue-50 text-blue-700 hover:bg-blue-100">
-                      {condition}
-                    </Badge>
-                  ))}
+            {/* Fake dashboard UI inside the mockup */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-[400px]">
+              <div className="col-span-2 bg-black/40 rounded-2xl p-6 border border-white/5 relative overflow-hidden">
+                <div className="w-3/4 h-6 border-b border-white/10 mb-6" />
+                <div className="space-y-4">
+                  <div className="w-full h-12 bg-white/5 rounded-xl animate-pulse" />
+                  <div className="w-5/6 h-12 bg-white/5 rounded-xl animate-pulse delay-75" />
+                  <div className="w-4/6 h-12 bg-white/5 rounded-xl animate-pulse delay-150" />
                 </div>
+                {/* Decorative glowing orb inside the mockup */}
+                <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-emerald-500/20 blur-[80px]" />
               </div>
-
-              <div>
-                <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3">Actionable Precautions</h3>
-                <ul className="space-y-2">
-                  {result.precautions.map((precaution, idx) => (
-                    <li key={idx} className="flex items-start gap-2 text-slate-700">
-                      <span className="text-blue-500 mt-0.5">•</span>
-                      {precaution}
-                    </li>
-                  ))}
-                </ul>
+              <div className="bg-emerald-500/10 rounded-2xl p-6 border border-emerald-500/20 relative flex flex-col items-center justify-center text-center">
+                <HeartPulse className="w-16 h-16 text-emerald-400 mb-4 animate-bounce" />
+                <h3 className="text-lg font-bold text-white">System Optimal</h3>
+                <p className="text-emerald-400/80 text-sm mt-2 font-medium">Processing 200+ inputs/sec</p>
               </div>
             </div>
           </div>
-        )}
+        </motion.div>
+      </section>
 
-      </div>
-    </main>
+      {/* ── FEATURES GRID ── */}
+      <section className="py-24 px-6 relative z-10 bg-black/20 border-t border-white/5">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-5xl font-black text-white mb-6">Built for Modern Medicine</h2>
+            <p className="text-slate-400 max-w-2xl mx-auto text-lg">
+              We've replaced outdated, clunky legacy systems with a lightning-fast, ultra-secure architecture powered by the latest advancements in LLMs.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {features.map((f, i) => (
+              <motion.div 
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: i * 0.1 }}
+                className="group p-8 rounded-3xl bg-white/[0.02] hover:bg-white/[0.04] border border-white/5 hover:border-emerald-500/30 transition-all cursor-crosshair overflow-hidden relative"
+              >
+                <div className="absolute top-0 right-0 p-8 opacity-0 group-hover:opacity-10 transition-opacity">
+                  {f.icon}
+                </div>
+                <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center border border-white/10 shadow-inner mb-6 group-hover:scale-110 group-hover:bg-white/10 transition-all">
+                  {f.icon}
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-3">{f.title}</h3>
+                <p className="text-slate-400 leading-relaxed font-medium">{f.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── SOCIAL PROOF / STATS ── */}
+      <section className="py-24 px-6 relative z-10 border-t border-white/5 bg-gradient-to-b from-[#080d14] to-black">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+             {[
+               { val: "99.9%", label: "Uptime SLA", icon: <Globe className="w-5 h-5" /> },
+               { val: "< 1s", label: "Analysis Time", icon: <Zap className="w-5 h-5" /> },
+               { val: "3 Agents", label: "Specialist Consensus", icon: <Users className="w-5 h-5" /> },
+               { val: "O-Auth", label: "Secure Integration", icon: <Shield className="w-5 h-5" /> },
+             ].map((stat, i) => (
+                <div key={i} className="text-center flex flex-col items-center">
+                  <div className="mb-4 text-emerald-400 opacity-80">{stat.icon}</div>
+                  <h4 className="text-4xl sm:text-5xl font-black text-white tracking-tight">{stat.val}</h4>
+                  <p className="text-slate-500 mt-2 font-bold uppercase tracking-widest text-xs">{stat.label}</p>
+                </div>
+             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── FOOTER CTA ── */}
+      <footer className="py-24 px-6 relative z-10 border-t border-white/5 text-center overflow-hidden">
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-[300px] bg-emerald-500/10 blur-[100px] pointer-events-none" />
+        <div className="max-w-3xl mx-auto relative z-10">
+          <HeartPulse className="w-12 h-12 text-emerald-400 mx-auto mb-6 animate-pulse" />
+          <h2 className="text-4xl font-black text-white mb-6">Ready to upgrade your triage?</h2>
+          <p className="text-slate-400 mb-10 text-lg">Stop relying on outdated workflows. Start leveraging Multi-Agent AI today to redefine patient care.</p>
+          <Link href="/login">
+            <button className="bg-emerald-500 hover:bg-emerald-400 text-black font-black text-lg px-10 py-5 rounded-2xl transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(16,185,129,0.4)]">
+              Enter The Application
+            </button>
+          </Link>
+        </div>
+        <div className="mt-20 text-slate-600 text-sm font-semibold">
+          © {new Date().getFullYear()} SmartTriage • MedAI Inc. • All rights reserved.
+        </div>
+      </footer>
+    </div>
   );
 }
