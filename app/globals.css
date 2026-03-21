@@ -141,3 +141,49 @@
     letter-spacing: -0.02em;
   }
 }
+
+/* ─── GLOBAL LIGHT MODE TEXT OVERRIDES ───────────────────────────────────────
+   The app was built dark-first. In light mode (:root without .dark), we need
+   all the hardcoded "light" utilities (text-white, text-slate-300/400) to
+   resolve to readable dark values. This CSS layer wins over Tailwind utilities
+   but is narrowly scoped to :root (non-dark context) for safety.
+   ──────────────────────────────────────────────────────────────────────────── */
+:root:not(.dark) {
+  /* ── Text ── */
+  .text-white            { color: #0f172a !important; }
+  .text-slate-200        { color: #1e293b !important; }
+  .text-slate-300        { color: #334155 !important; }
+  .text-slate-400        { color: #475569 !important; }
+  .text-slate-500        { color: #64748b !important; }
+
+  /* ── Placeholder text ── */
+  .placeholder\:text-slate-600::placeholder { color: #94a3b8 !important; }
+
+  /* ── Semi-transparent backgrounds (dark-glass → light-glass) ── */
+  .bg-white\/\[0\.02\]  { background-color: rgba(0,0,0,0.02) !important; }
+  .bg-white\/\[0\.03\]  { background-color: rgba(0,0,0,0.03) !important; }
+  .bg-white\/\[0\.04\]  { background-color: rgba(0,0,0,0.04) !important; }
+  .bg-white\/\[0\.05\]  { background-color: rgba(0,0,0,0.05) !important; }
+  .bg-white\/\[0\.06\]  { background-color: rgba(0,0,0,0.06) !important; }
+  .bg-white\/\[0\.08\]  { background-color: rgba(0,0,0,0.08) !important; }
+  .bg-white\/5          { background-color: rgba(0,0,0,0.05) !important; }
+  .bg-white\/10         { background-color: rgba(0,0,0,0.07) !important; }
+  .bg-white\/20         { background-color: rgba(0,0,0,0.10) !important; }
+  .bg-black\/40         { background-color: rgba(255,255,255,0.85) !important; }
+
+  /* ── Borders (dark-glass → light-glass) ── */
+  .border-white\/10      { border-color: rgba(0,0,0,0.10) !important; }
+  .border-white\/20      { border-color: rgba(0,0,0,0.15) !important; }
+  .border-white\/\[0\.06\] { border-color: rgba(0,0,0,0.06) !important; }
+  .border-white\/\[0\.08\] { border-color: rgba(0,0,0,0.08) !important; }
+
+  /* ── DNA video: boost visibility for light bg ── */
+  .dna-video-overlay {
+    background: linear-gradient(to bottom, rgba(248,250,252,0.6) 0%, rgba(248,250,252,0.3) 50%, rgba(248,250,252,0.95) 100%) !important;
+  }
+  video.dna-bg {
+    opacity: 0.25 !important;
+    filter: hue-rotate(140deg) contrast(1.4) saturate(1.8) !important;
+    mix-blend-mode: multiply !important;
+  }
+}

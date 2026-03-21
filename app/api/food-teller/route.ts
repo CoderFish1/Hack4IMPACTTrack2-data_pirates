@@ -2,10 +2,10 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
-    const { base64Image, patientCondition } = await req.json();
+    const { foodText, patientCondition, mealType } = await req.json();
 
-    if (!base64Image || !patientCondition) {
-      return NextResponse.json({ error: "Image data and patient condition are required" }, { status: 400 });
+    if (!foodText || !patientCondition) {
+      return NextResponse.json({ error: "Food text and patient condition are required" }, { status: 400 });
     }
 
     const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -15,27 +15,18 @@ export async function POST(req: Request) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "llama-3.2-11b-vision-preview",
+        model: "llama-3.3-70b-versatile",
         messages: [
           {
+            role: "system",
+            content: `You are an expert clinical dietician. Evaluate the user's food meal against their medical condition: "${patientCondition}". They are eating this for: "${mealType || 'General Meal'}". Return valid JSON ONLY: { "foodIdentified": "Cleaned name of food", "estimatedCalories": "Number", "safeToEat": true/false, "recommendation": "Patient-friendly explanation of why they can or cannot eat it", "whatToEatInstead": ["List", "of", "specific", "full meals", "to eat instead"], "whenToEat": "Detailed info on the best time of day to eat this specific meal based on their condition (e.g. 'Eat this 2 hours before a workout' or 'Avoid eating this past 6 PM due to acid reflux')", "nutritionHighlights": {"protein":"10g", "carbs":"20g", "fat":"5g", "fiber":"3g"} }`,
+          },
+          {
             role: "user",
-            content: [
-              {
-                type: "text",
-                text: `You are an expert clinical dietician. Analyze this food image considering the patient's condition: "${patientCondition}". Return valid JSON ONLY: { "foodIdentified": "Name of food", "estimatedCalories": "Number", "safeToEat": true/false, "recommendation": "Patient-friendly explanation of why they can or cannot eat it", "alternatives": ["List", "of", "safer", "options"] }`,
-              },
-              {
-                type: "image_url",
-                image_url: {
-                  url: base64Image,
-                },
-              },
-            ],
+            content: foodText,
           },
         ],
-        max_tokens: 1024,
         temperature: 0.5,
-        top_p: 1
       })
     });
 

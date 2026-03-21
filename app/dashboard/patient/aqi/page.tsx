@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Wind, MapPin, Thermometer, Droplets, AlertTriangle,
   Sun, CloudRain, Loader2, Navigation, Heart, HardHat,
-  ArrowLeft, ShieldAlert
+  ArrowLeft, Search
 } from "lucide-react";
 import Link from "next/link";
 
@@ -25,6 +25,7 @@ interface AqiData {
     outdoorWorker: string;
     aqiSeverity: "Good" | "Moderate" | "Poor" | "Severe";
   };
+  locationName?: string;
 }
 
 const severityConfig = {
@@ -38,40 +39,33 @@ export default function AqiPage() {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<AqiData | null>(null);
   const [error, setError] = useState("");
-  const [locating, setLocating] = useState(false);
+  const [locationStr, setLocationStr] = useState("");
 
-  const getLocation = () => {
-    if (!navigator.geolocation) {
-      setError("Geolocation is not supported by your browser.");
+  const fetchAqi = async () => {
+    if (!locationStr.trim()) {
+      setError("Please enter a city or location.");
       return;
     }
-    setLocating(true);
+    setLoading(true);
     setError("");
-    navigator.geolocation.getCurrentPosition(
-      async (pos) => {
-        setLocating(false);
-        setLoading(true);
-        try {
-          const res = await fetch(`/api/aqi?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}`);
-          if (!res.ok) throw new Error();
-          const json = await res.json();
-          setData(json);
-        } catch {
-          setError("Failed to fetch AQI data. Please try again.");
-        } finally {
-          setLoading(false);
-        }
-      },
-      () => {
-        setLocating(false);
-        setError("Location access denied. Please enable GPS and try again.");
-      },
-      { enableHighAccuracy: true, timeout: 10000 }
-    );
+    try {
+      const res = await fetch(`/api/aqi`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ location: locationStr }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || "Failed to fetch AQI");
+      setData(json);
+    } catch (err: any) {
+      setError(err.message || "Failed to fetch AQI data. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const severity = data?.advisory?.aqiSeverity || "Good";
-  const config = severityConfig[severity];
+  const config = severityConfig[severity] || severityConfig["Good"];
 
   return (
     <div className="space-y-6">
@@ -83,28 +77,44 @@ export default function AqiPage() {
         </Link>
         <div>
           <h1 className="text-2xl font-black text-white">Air Quality & Weather Advisory</h1>
-          <p className="text-slate-400 text-sm mt-0.5">Real-time AQI and health recommendations for your location</p>
+          <p className="text-slate-400 text-sm mt-0.5">Real-time AQI and health recommendations</p>
         </div>
       </div>
 
-      {/* Get Location Button */}
+      {/* Input Section */}
       {!data && !loading && (
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
           className="rounded-3xl border border-sky-500/20 bg-gradient-to-br from-sky-500/10 to-transparent p-10 flex flex-col items-center gap-6 text-center">
           <div className="w-20 h-20 rounded-3xl bg-sky-500/15 border border-sky-500/20 flex items-center justify-center">
-            <Navigation className="h-10 w-10 text-sky-400" />
+            <MapPin className="h-10 w-10 text-sky-400" />
           </div>
           <div>
-            <h2 className="text-xl font-black text-white mb-2">Check Your Local Air Quality</h2>
+            <h2 className="text-xl font-black text-white mb-2">Check Local Air Quality</h2>
             <p className="text-slate-400 text-sm max-w-md">
-              Get live AQI, temperature, humidity and personalized health advisories powered by AI — specifically for asthma patients, outdoor workers, and general wellness.
+              Enter your city to get live AQI, weather, and personalized AI health advisories.
             </p>
           </div>
-          <button onClick={getLocation} disabled={locating}
-            className="flex items-center gap-3 px-8 py-4 rounded-2xl bg-sky-500 hover:bg-sky-400 text-black font-black text-sm disabled:opacity-50 transition-all shadow-lg shadow-sky-500/20">
-            {locating ? <Loader2 className="h-5 w-5 animate-spin" /> : <MapPin className="h-5 w-5" />}
-            {locating ? "Getting Location..." : "📍 Get My Location"}
+          
+          <div className="w-full max-w-md">
+            <div className="relative">
+              <input 
+                type="text"
+                value={locationStr}
+                onChange={e => setLocationStr(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && fetchAqi()}
+                placeholder="e.g. New Delhi, Mumbai, New York..."
+                className="w-full bg-black/40 border border-white/10 text-white rounded-2xl pl-12 pr-4 py-4 text-sm focus:ring-2 focus:ring-sky-500 outline-none placeholder:text-slate-500"
+              />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+            </div>
+          </div>
+
+          <button onClick={fetchAqi}
+            className="flex items-center gap-3 px-8 py-4 rounded-2xl bg-sky-500 hover:bg-sky-400 text-black font-black text-sm transition-all shadow-lg shadow-sky-500/20">
+            <Navigation className="h-5 w-5" />
+            Check Air Quality
           </button>
+          
           {error && (
             <p className="text-red-400 text-xs font-medium flex items-center gap-1.5">
               <AlertTriangle className="h-3.5 w-3.5" /> {error}
@@ -118,8 +128,8 @@ export default function AqiPage() {
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
           className="rounded-3xl border border-sky-500/20 bg-sky-500/5 p-10 flex flex-col items-center gap-4">
           <Loader2 className="h-10 w-10 text-sky-400 animate-spin" />
-          <p className="text-slate-300 font-bold">Fetching live AQI & weather data...</p>
-          <p className="text-slate-500 text-xs">Analyzing with AI health advisor</p>
+          <p className="text-slate-300 font-bold">Scanning Web for AQI Data...</p>
+          <p className="text-slate-500 text-xs">Analyzing location data using Firecrawl AI</p>
         </motion.div>
       )}
 
@@ -132,7 +142,7 @@ export default function AqiPage() {
             <div className={`rounded-3xl border ${config.border} ${config.bg} p-8`}>
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">Air Quality Index</p>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">Air Quality in {data.locationName || locationStr}</p>
                   <div className="flex items-baseline gap-3">
                     <span className="text-5xl font-black text-white">{data.aqi.value}</span>
                     <span className={`text-lg font-black ${config.text}`}>{severity}</span>
@@ -213,9 +223,9 @@ export default function AqiPage() {
 
             {/* Refresh */}
             <div className="flex justify-center">
-              <button onClick={getLocation}
+              <button onClick={() => { setData(null); setLocationStr(""); }}
                 className="flex items-center gap-2 px-6 py-3 rounded-2xl border border-white/10 bg-white/[0.03] text-slate-300 hover:text-white hover:border-sky-500/30 font-bold text-sm transition-all">
-                <Navigation className="h-4 w-4" /> Refresh Data
+                <Search className="h-4 w-4" /> Search New Location
               </button>
             </div>
           </motion.div>

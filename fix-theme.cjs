@@ -5,7 +5,12 @@ const dirs = [
   "app/dashboard/patient/page.tsx",
   "app/dashboard/doctor/page.tsx",
   "app/dashboard/admin/page.tsx",
-  "app/dashboard/triage/page.tsx"
+  "app/dashboard/triage/page.tsx",
+  "app/dashboard/patient/report-explainer/page.tsx",
+  "app/dashboard/patient/myth-buster/page.tsx",
+  "app/dashboard/patient/medicine-finder/page.tsx",
+  "app/(auth)/login/page.tsx",
+  "app/(auth)/register/page.tsx"
 ];
 
 dirs.forEach(file => {

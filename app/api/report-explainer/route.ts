@@ -2,10 +2,10 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
-    const { base64Image } = await req.json();
+   const { reportText } = await req.json();
 
-    if (!base64Image) {
-      return NextResponse.json({ error: "Image data is required" }, { status: 400 });
+    if (!reportText) {
+      return NextResponse.json({ error: "Report text is required" }, { status: 400 });
     }
 
     const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -15,27 +15,18 @@ export async function POST(req: Request) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "llama-3.2-11b-vision-preview",
+        model: "llama-3.3-70b-versatile",
         messages: [
           {
+            role: "system",
+            content: "You are an empathetic medical assistant. Extract key out-of-range values from the provided lab report text. Explain what they mean using simple analogies (e.g., 'cholesterol is like sludge in a pipe'). No complex jargon. Return as a well-formatted markdown string with bullet points and bold headers.",
+          },
+          {
             role: "user",
-            content: [
-              {
-                type: "text",
-                text: "You are an empathetic medical assistant. The user uploaded a lab report. Extract key out-of-range values. Explain what they mean using simple analogies (e.g., 'cholesterol is like sludge in a pipe'). No complex jargon. Return as a well-formatted markdown string with bullet points and bold headers.",
-              },
-              {
-                type: "image_url",
-                image_url: {
-                  url: base64Image,
-                },
-              },
-            ],
+            content: reportText,
           },
         ],
-        max_tokens: 1024,
         temperature: 0.5,
-        top_p: 1
       })
     });
 
