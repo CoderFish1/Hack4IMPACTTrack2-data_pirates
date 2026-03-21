@@ -8,13 +8,19 @@ import {
   HeartPulse, Activity, Shield, Users, Brain, FileText, ArrowRight,
   Sun, Moon, Star, Zap, Lock, Globe
 } from "lucide-react";
+import SplashScreen from "@/components/splash-screen";
 
 export default function LandingPage() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const [splashDone, setSplashDone] = useState(false);
 
   useEffect(() => {
     setMounted(true);
+    // Check if splash was already shown
+    if (sessionStorage.getItem("splash_shown") === "1") {
+      setSplashDone(true);
+    }
   }, []);
 
   const features = [
@@ -41,9 +47,17 @@ export default function LandingPage() {
   ];
 
   return (
-    <div className="min-h-screen font-sans selection:bg-emerald-500/30 selection:text-emerald-200 overflow-x-hidden">
+    <>
+      {/* Splash Screen Overlay */}
+      {!splashDone && <SplashScreen onComplete={() => setSplashDone(true)} />}
+
+      <motion.div
+        className="min-h-screen font-sans selection:bg-emerald-500/30 selection:text-emerald-200 overflow-x-hidden"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: splashDone ? 1 : 0 }}
+        transition={{ duration: 1, ease: "easeOut" }}
+      >
       
-      {/* ── NAVBAR ── */}
       <nav className="fixed top-0 w-full z-50 transition-all duration-300 border-b border-white/5 bg-black/40 backdrop-blur-2xl">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
@@ -70,10 +84,25 @@ export default function LandingPage() {
       </nav>
 
       {/* ── HERO SECTION ── */}
-      <section className="relative pt-40 pb-20 lg:pt-48 lg:pb-32 px-6">
+      <section className="relative pt-40 pb-20 lg:pt-48 lg:pb-32 px-6 overflow-hidden">
         
+        {/* DNA Video Background */}
+        <div className="absolute inset-0 z-0">
+          <video
+            src="/dna.mp4"
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="w-full h-full object-cover opacity-30 mix-blend-screen"
+            style={{ filter: "hue-rotate(140deg) contrast(1.2)" }}
+          />
+          {/* Gradient overlay to fade the video seamlessly into the background */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-[#080d14]" />
+        </div>
+
         {/* Background glow effects */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-emerald-500/20 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-emerald-500/20 rounded-full blur-[120px] pointer-events-none z-0" />
         <div className="absolute top-1/3 left-1/4 w-[400px] h-[400px] bg-sky-500/15 rounded-full blur-[100px] pointer-events-none" />
 
         <div className="max-w-7xl mx-auto text-center relative z-10">
@@ -241,6 +270,7 @@ export default function LandingPage() {
           © {new Date().getFullYear()} संजीवनी Lifeline • MedAI Tech • All rights reserved.
         </div>
       </footer>
-    </div>
+    </motion.div>
+    </>
   );
 }

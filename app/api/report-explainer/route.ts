@@ -1,60 +1,54 @@
 import { NextResponse } from "next/server";
-import OpenAI from "openai";
-
-const openai = new OpenAI({
-  apiKey: process.env.GROQ_API_KEY,
-  baseURL: "https://api.groq.com/openai/v1",
-});
 
 export async function POST(req: Request) {
   try {
-    const { base64Image } = (await req.json()) as { base64Image?: string };
-    if (!base64Image?.trim()) {
-      return NextResponse.json({ error: "base64Image required" }, { status: 400 });
+    const { base64Image } = await req.json();
+
+    if (!base64Image) {
+      return NextResponse.json({ error: "Image data is required" }, { status: 400 });
     }
 
-    // Determine MIME type from base64 prefix or default to jpeg
-    let mimeType = "image/jpeg";
-    if (base64Image.startsWith("data:")) {
-      const match = base64Image.match(/^data:(image\/\w+);base64,/);
-      if (match) mimeType = match[1];
-    }
-
-    // Strip data URI prefix if present
-    const base64Clean = base64Image.replace(/^data:image\/\w+;base64,/, "");
-
-    const res = await openai.chat.completions.create({
-      model: "llama-3.2-90b-vision-preview",
-      messages: [
-        {
-          role: "user",
-          content: [
-            {
-              type: "text",
-              text: `You are an empathetic medical assistant. The user uploaded a lab report. Extract key out-of-range values. Explain what they mean using simple analogies (e.g., 'cholesterol is like sludge in a pipe'). No complex jargon. Format your response as clean markdown with:
-- A ## Summary section
-- A ## Key Findings section with bullet points for each out-of-range value
-- A ## What This Means section with simple analogies
-- A ## Recommended Actions section
-Be warm, encouraging and helpful.`,
-            },
-            {
-              type: "image_url",
-              image_url: {
-                url: `data:${mimeType};base64,${base64Clean}`,
+    const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${process.env.GROQ_API_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: "llama-3.2-90b-vision-preview",
+        messages: [
+          {
+            role: "user",
+            content: [
+              {
+                type: "text",
+                text: "You are an empathetic medical assistant. The user uploaded a lab report. Extract key out-of-range values. Explain what they mean using simple analogies (e.g., 'cholesterol is like sludge in a pipe'). No complex jargon. Return as a well-formatted markdown string with bullet points and bold headers.",
               },
-            },
-          ],
-        },
-      ],
-      temperature: 0.3,
-      max_tokens: 2000,
+              {
+                type: "image_url",
+                image_url: {
+                  url: base64Image,
+                },
+              },
+            ],
+          },
+        ],
+        max_tokens: 1024,
+        temperature: 0.5,
+        top_p: 1
+      })
     });
 
-    const markdown = res.choices[0].message.content || "Unable to analyze the report.";
-    return NextResponse.json({ markdown });
-  } catch (e) {
-    console.error("Report explainer error:", e);
-    return NextResponse.json({ error: "Failed to analyze report" }, { status: 500 });
+    if (!groqRes.ok) {
+        throw new Error("Failed to connect to Groq Vision API");
+    }
+
+    const completion = await groqRes.json();
+    const explanation = completion.choices?.[0]?.message?.content || "Could not analyze the image.";
+
+    return NextResponse.json({ explanation });
+  } catch (error: any) {
+    console.error("Report Explainer Error:", error);
+    return NextResponse.json({ error: error.message || "Failed to analyze report" }, { status: 500 });
   }
 }
