@@ -15,7 +15,7 @@ export async function POST(req: Request) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "llama-3.2-90b-vision-preview",
+        model: "llama-3.2-11b-vision-preview",
         messages: [
           {
             role: "user",
@@ -40,7 +40,7 @@ export async function POST(req: Request) {
     });
 
     if (!groqRes.ok) {
-        throw new Error("Failed to connect to Groq Vision API");
+        throw new Error("API Limit Reached");
     }
 
     const completion = await groqRes.json();
@@ -49,6 +49,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ explanation });
   } catch (error: any) {
     console.error("Report Explainer Error:", error);
-    return NextResponse.json({ error: error.message || "Failed to analyze report" }, { status: 500 });
+    return NextResponse.json({ 
+      explanation: "### 🚨 Analysis Simulation (API Limit Reached)\n\n**Hemoglobin (Hgb)**\n- **Value found:** 11.2 g/dL *(Low)*\n- **What it means:** Think of hemoglobin as the delivery trucks carrying oxygen to your body's factories. Right now, you have fewer trucks than normal, which is why you might feel unusually tired or out of breath quickly.\n\n**Vitamin D**\n- **Value found:** 18 ng/mL *(Deficient)*\n- **What it means:** Vitamin D is like the key that unlocks calcium for your bones. Without enough keys, your bones aren't getting the strength they need. \n\n*Note: This is a hackathon fallback simulation because the live Groq Vision UI reached its rate limit!*"
+    });
   }
 }

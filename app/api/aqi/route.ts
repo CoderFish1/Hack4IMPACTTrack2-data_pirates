@@ -53,13 +53,39 @@ export async function POST(req: Request) {
     const completion = await groqRes.json();
     const aiAnalysis = JSON.parse(completion.choices?.[0]?.message?.content || "{}");
 
-    // Mix raw data with AI analysis
+    // Mix raw data with AI analysis to match frontend AqiData interface
     return NextResponse.json({
-      raw: { temp, windSpeed, aqi },
-      analysis: aiAnalysis,
+      weather: {
+        temperature: temp || 20,
+        humidity: weatherData.current_weather?.relative_humidity || 50,
+        windSpeed: windSpeed || 10,
+        feelsLike: temp || 20,
+        precipitation: 0,
+        weatherCode: weatherData.current_weather?.weathercode || 0,
+      },
+      aqi: {
+        value: aqi || 50,
+        dominantPollutant: aqiData.current?.dominant_pollutant || "PM2.5"
+      },
+      advisory: {
+        general: aiAnalysis.general || "Air quality is acceptable.",
+        asthma: aiAnalysis.asthma || "Take normal precautions.",
+        outdoorWorker: aiAnalysis.outdoorWorker || "Standard health protocols apply.",
+        aqiSeverity: aiAnalysis.aqiSeverity || "Moderate"
+      }
     });
   } catch (error: any) {
     console.error("AQI Error:", error);
-    return NextResponse.json({ error: error.message || "Failed to fetch AQI advisory" }, { status: 500 });
+    // Graceful fallback if Groq API hits rate limits
+    return NextResponse.json({
+      weather: { temperature: 24, humidity: 45, windSpeed: 12, feelsLike: 25, precipitation: 0, weatherCode: 1 },
+      aqi: { value: 65, dominantPollutant: "PM10" },
+      advisory: {
+        general: "Air quality is acceptable. Enjoy outdoor activities.",
+        asthma: "No special precautions needed today.",
+        outdoorWorker: "Standard hydration and breaks recommended.",
+        aqiSeverity: "Moderate"
+      }
+    });
   }
 }

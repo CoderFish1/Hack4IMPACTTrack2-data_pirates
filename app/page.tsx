@@ -151,6 +151,11 @@ export default function LandingPage() {
                 <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </button>
             </Link>
+            <Link href="/dashboard/patient" className="w-full sm:w-auto">
+              <button className="w-full relative group inline-flex items-center justify-center gap-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 px-8 py-4 text-base font-black text-emerald-400 transition-all hover:bg-emerald-500/20 hover:scale-105 active:scale-95">
+                View AI Health Tools
+              </button>
+            </Link>
             <div className="flex items-center gap-4 mt-4 sm:mt-0 text-slate-500 text-sm font-bold">
               <div className="flex -space-x-3">
                 {[1, 2, 3, 4].map((i) => (

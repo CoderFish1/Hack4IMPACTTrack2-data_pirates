@@ -7,7 +7,7 @@ import {
   Activity, Shield, FileText, RefreshCw, Pill, Baby,
   Droplets, Calendar, Zap, Brain, TrendingUp, AlertCircle,
   Search, MapPin, Phone, CheckCircle, X, ChevronDown,
-  Thermometer, Wind, Stethoscope
+  Thermometer, Wind, Stethoscope, ShieldAlert
 } from "lucide-react";
 import Link from "next/link";
 
@@ -745,10 +745,10 @@ export default function PatientDashboard() {
       </div>
 
       {/* Quick Actions */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         <Link href="/dashboard/triage">
           <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-            className="group cursor-pointer rounded-3xl border border-sky-500/30 bg-sky-500/5 hover:bg-sky-500/10 p-6 transition-all">
+            className="group cursor-pointer rounded-3xl border border-sky-500/30 bg-sky-500/5 hover:bg-sky-500/10 p-6 transition-all h-full">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-2xl bg-sky-500/20 flex items-center justify-center">
@@ -756,7 +756,7 @@ export default function PatientDashboard() {
                 </div>
                 <div>
                   <h3 className="font-bold text-white">Start AI Triage</h3>
-                  <p className="text-sm text-slate-400">Describe symptoms & get instant analysis</p>
+                  <p className="text-sm text-slate-400">Describe symptoms for instant auto-analysis</p>
                 </div>
               </div>
               <ChevronRight className="h-5 w-5 text-slate-500 group-hover:text-sky-400 transition-colors" />
@@ -765,7 +765,7 @@ export default function PatientDashboard() {
         </Link>
         <Link href="/passport">
           <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-            className="group cursor-pointer rounded-3xl border border-violet-500/30 bg-violet-500/5 hover:bg-violet-500/10 p-6 transition-all">
+            className="group cursor-pointer rounded-3xl border border-violet-500/30 bg-violet-500/5 hover:bg-violet-500/10 p-6 transition-all h-full">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-2xl bg-violet-500/20 flex items-center justify-center">
@@ -773,10 +773,95 @@ export default function PatientDashboard() {
                 </div>
                 <div>
                   <h3 className="font-bold text-white">Medical Passport</h3>
-                  <p className="text-sm text-slate-400">Emergency medical ID with QR code</p>
+                  <p className="text-sm text-slate-400">Emergency medical ID with QR code generation</p>
                 </div>
               </div>
               <ChevronRight className="h-5 w-5 text-slate-500 group-hover:text-violet-400 transition-colors" />
+            </div>
+          </motion.div>
+        </Link>
+        <Link href="/dashboard/patient/aqi">
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+            className="group cursor-pointer rounded-3xl border border-emerald-500/30 bg-emerald-500/5 hover:bg-emerald-500/10 p-6 transition-all h-full">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 flex items-center justify-center">
+                  <Wind className="h-6 w-6 text-emerald-400" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-white">Live AQI Advisory</h3>
+                  <p className="text-sm text-slate-400">Real-time local health hazard warnings</p>
+                </div>
+              </div>
+              <ChevronRight className="h-5 w-5 text-slate-500 group-hover:text-emerald-400 transition-colors" />
+            </div>
+          </motion.div>
+        </Link>
+        <Link href="/dashboard/patient/medicine-finder">
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+            className="group cursor-pointer rounded-3xl border border-rose-500/30 bg-rose-500/5 hover:bg-rose-500/10 p-6 transition-all h-full">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-2xl bg-rose-500/20 flex items-center justify-center">
+                  <Pill className="h-6 w-6 text-rose-400" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-white">Generic Medicine</h3>
+                  <p className="text-sm text-slate-400">Live Jan Aushadhi bulk prices & savings</p>
+                </div>
+              </div>
+              <ChevronRight className="h-5 w-5 text-slate-500 group-hover:text-rose-400 transition-colors" />
+            </div>
+          </motion.div>
+        </Link>
+        <Link href="/dashboard/patient/myth-buster">
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+            className="group cursor-pointer rounded-3xl border border-amber-500/30 bg-amber-500/5 hover:bg-amber-500/10 p-6 transition-all h-full">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-2xl bg-amber-500/20 flex items-center justify-center">
+                  <AlertCircle className="h-6 w-6 text-amber-400" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-white">Myth Buster</h3>
+                  <p className="text-sm text-slate-400">Fact-check forwarded WhatsApp clinical claims</p>
+                </div>
+              </div>
+              <ChevronRight className="h-5 w-5 text-slate-500 group-hover:text-amber-400 transition-colors" />
+            </div>
+          </motion.div>
+        </Link>
+        <Link href="/dashboard/patient/report-explainer">
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+            className="group cursor-pointer rounded-3xl border border-cyan-500/30 bg-cyan-500/5 hover:bg-cyan-500/10 p-6 transition-all h-full">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-2xl bg-cyan-500/20 flex items-center justify-center">
+                  <FileText className="h-6 w-6 text-cyan-400" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-white">Report Explainer</h3>
+                  <p className="text-sm text-slate-400">Jargon converted to simple patient analogies</p>
+                </div>
+              </div>
+              <ChevronRight className="h-5 w-5 text-slate-500 group-hover:text-cyan-400 transition-colors" />
+            </div>
+          </motion.div>
+        </Link>
+        <Link href="/dashboard/patient/food-teller">
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+            className="group cursor-pointer rounded-3xl border border-lime-500/30 bg-lime-500/5 hover:bg-lime-500/10 p-6 transition-all h-full">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-2xl bg-lime-500/20 flex items-center justify-center flex-shrink-0">
+                  <span className="text-2xl pt-1">🥗</span>
+                </div>
+                <div>
+                  <h3 className="font-bold text-white">Food Teller Scanner</h3>
+                  <p className="text-sm text-slate-400">Dietary safety check against your medical condition</p>
+                </div>
+              </div>
+              <ChevronRight className="h-5 w-5 text-slate-500 group-hover:text-lime-400 transition-colors" />
             </div>
           </motion.div>
         </Link>
@@ -784,9 +869,6 @@ export default function PatientDashboard() {
 
       {/* Real-Time Vitals */}
       <VitalsMonitor />
-
-      {/* Rx Price Finder */}
-      <RxPriceFinder />
 
       {/* Smart Scheduling */}
       <SpecialistMatcher />
