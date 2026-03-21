@@ -131,11 +131,11 @@ export default function LandingPage() {
             muted
             loop
             playsInline
-            className="dna-bg w-full h-full object-cover opacity-20 dark:opacity-30 mix-blend-multiply dark:mix-blend-screen"
-            style={{ filter: "hue-rotate(140deg) contrast(1.4) saturate(1.8)" }}
+            className="dna-bg w-full h-full object-cover opacity-15 dark:opacity-25 mix-blend-normal dark:mix-blend-screen"
+            style={{ filter: "hue-rotate(140deg) contrast(1.3) saturate(2) brightness(0.85)" }}
           />
-          {/* Gradient overlay to fade the video seamlessly into the background */}
-          <div className="dna-video-overlay absolute inset-0 bg-gradient-to-b from-slate-50/80 via-slate-50/40 to-slate-50 dark:from-black/80 dark:via-black/40 dark:to-[#080d14]" />
+          {/* Gradient overlay — light but not too heavy */}
+          <div className="dna-video-overlay absolute inset-0 bg-gradient-to-b from-slate-50/60 via-slate-50/30 to-slate-50 dark:from-black/70 dark:via-black/30 dark:to-[#080d14]" />
         </div>
 
         {/* Background glow effects */}
@@ -183,7 +183,7 @@ export default function LandingPage() {
             className="flex flex-col sm:flex-row items-center justify-center gap-4"
           >
             <Link href="/login" className="w-full sm:w-auto">
-              <button className="w-full relative group inline-flex items-center justify-center gap-3 rounded-2xl bg-slate-900 dark:bg-white px-8 py-4 text-base font-black text-white dark:text-black transition-all hover:scale-105 active:scale-95 shadow-[0_0_40px_rgba(0,0,0,0.1)] dark:shadow-[0_0_40px_rgba(255,255,255,0.2)]">
+              <button className="w-full relative group inline-flex items-center justify-center gap-3 rounded-2xl bg-emerald-600 hover:bg-emerald-500 dark:bg-white dark:hover:bg-white/90 px-8 py-4 text-base font-black text-white dark:text-black transition-all hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(16,185,129,0.25)] dark:shadow-[0_0_40px_rgba(255,255,255,0.2)]">
                 Enter The Application
                 <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </button>

@@ -176,14 +176,4 @@
   .border-white\/20      { border-color: rgba(0,0,0,0.15) !important; }
   .border-white\/\[0\.06\] { border-color: rgba(0,0,0,0.06) !important; }
   .border-white\/\[0\.08\] { border-color: rgba(0,0,0,0.08) !important; }
-
-  /* ── DNA video: boost visibility for light bg ── */
-  .dna-video-overlay {
-    background: linear-gradient(to bottom, rgba(248,250,252,0.6) 0%, rgba(248,250,252,0.3) 50%, rgba(248,250,252,0.95) 100%) !important;
-  }
-  video.dna-bg {
-    opacity: 0.25 !important;
-    filter: hue-rotate(140deg) contrast(1.4) saturate(1.8) !important;
-    mix-blend-mode: multiply !important;
-  }
 }
