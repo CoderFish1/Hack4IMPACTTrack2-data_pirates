@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server"
-import { clearAuthCookies } from "@/lib/auth-cookies"
 
 export async function POST() {
-  await clearAuthCookies()
-  return NextResponse.json({ ok: true })
+  const res = NextResponse.json({ ok: true })
+  res.cookies.set({ name: "medai_auth", value: "", httpOnly: true, path: "/", maxAge: 0 })
+  res.cookies.set({ name: "medai_role", value: "", httpOnly: false, path: "/", maxAge: 0 })
+  res.cookies.set({ name: "medai_name", value: "", httpOnly: false, path: "/", maxAge: 0 })
+  return res
 }
 
